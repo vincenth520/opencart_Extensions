@@ -1,0 +1,134 @@
+<modification>
+    <name>index_description</name>
+	<version>1.1.1</version>
+	<link>http://www.luvial.cn</link>
+	<author>Vincent</author>
+	<code>index_description_ocmod</code>
+
+	<file path="admin/language/english/setting/setting.php">
+		<operation>
+			<search ><![CDATA[$_['entry_meta_keyword']]]></search>
+			<add position="before">
+				<![CDATA[$_['index_desc_title']               = 'Index Descript Title';
+				$_['index_desc']               = 'Index Descript';]]>
+			</add>
+		</operation>
+	</file>
+
+	<file path="admin/controller/setting/setting.php">
+		<operation>
+			<search ><![CDATA[$data['entry_meta_keyword'] = $this->language->get('entry_meta_keyword');]]></search>
+			<add position="after">
+				<![CDATA[$data['index_desc_title'] = $this->language->get('index_desc_title');
+				$data['index_desc'] = $this->language->get('index_desc');]]>
+			</add>
+		</operation>
+		<operation>
+			<search ><![CDATA[if (isset($this->request->post['config_meta_keyword'])) {]]></search>
+			<add position="before">
+				<![CDATA[if (isset($this->request->post['config_meta_desc_title'])) {
+			$data['config_meta_desc_title'] = $this->request->post['config_meta_desc_title'];
+		} else {
+			$data['config_meta_desc_title'] = $this->config->get('config_meta_desc_title');
+		}
+
+		if (isset($this->request->post['config_meta_desc'])) {
+			$data['config_meta_desc'] = $this->request->post['config_meta_desc'];
+		} else {
+			$data['config_meta_desc'] = $this->config->get('config_meta_desc');
+		}]]>
+			</add>
+		</operation>
+	</file>
+
+	<file path="admin/view/template/setting/setting.tpl">
+		<operation>
+			<search ><![CDATA[<textarea name="config_meta_keyword" rows="5" placeholder="<?php echo $entry_meta_keyword; ?>" id="input-meta-keyword" class="form-control"><?php echo $config_meta_keyword; ?></textarea>]]></search>
+			<add position="replace"><![CDATA[<textarea name="config_meta_keyword" rows="5" placeholder="<?php echo $entry_meta_keyword; ?>" id="input-meta-keyword" class="form-control"><?php echo $config_meta_keyword; ?></textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-meta-desc-title"><?php echo $index_desc_title; ?></label>
+                <div class="col-sm-10">
+                  <textarea name="config_meta_desc_title" rows="5" placeholder="<?php echo $index_desc_title; ?>" id="input-meta-desc-title" class="form-control"><?php echo $config_meta_desc_title; ?></textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-meta-desc"><?php echo $index_desc; ?></label>
+                <div class="col-sm-10">
+                  <textarea name="config_meta_desc" rows="5" placeholder="<?php echo $index_desc; ?>" id="input-meta-desc" class="form-control"><?php echo $config_meta_desc; ?></textarea>
+                </div>
+              </div>
+              <script>$('#input-meta-desc').summernote({ height: 300 });</script>
+              ]]></add>
+		</operation>
+	</file>
+
+	<file path="catalog/controller/common/home.php">
+		<operation>
+			<search ><![CDATA[$data['column_left'] = $this->load->controller('common/column_left');]]></search>
+			<add position="after">
+				<![CDATA[$data['index_desc_title'] = $this->config->get('config_meta_desc_title');
+				$data['index_desc'] = $this->config->get('config_meta_desc');]]>
+			</add>
+		</operation>
+	</file>
+
+	<file path="catalog/view/theme/*/template/common/home.tpl">
+		<operation>
+			<search ><![CDATA[<?php echo $column_right; ?>]]></search>
+			<add position="after">
+				<![CDATA[<div id="description" class="container"><div class="description-text">
+                    <span class="description-text-content">
+                        <p dir="ltr" style="line-height:1.2;margin-top:0pt;margin-bottom:12pt;text-align: center;"><span style="font-size: 35px;font-family:Calibri;color:#222222;background-color:transparent;font-weight:700;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre-wrap;"><?php echo $index_desc_title; ?></span><span class="opener fa fa-plus" style="float: right;line-height: 40px;cursor: pointer;">&nbsp;</span></p>
+                        <div id="description_content" style="line-height:1.2;margin-top:0pt;margin-bottom:12pt;display: none;"><?php echo htmlspecialchars_decode($index_desc); ?></div>
+                        </span></div></div>
+
+<script type="text/javascript">
+    $('.opener').click(function() {
+        if($(this).attr('class').indexOf('fa-plus')>=0){
+            $(this).removeClass('fa-plus');
+            $(this).addClass('fa-minus');
+            $('#description_content').show();
+        }else{
+            $(this).removeClass('fa-minus');
+            $(this).addClass('fa-plus');
+            $('#description_content').hide();
+        }
+    })
+
+</script>]]>
+			</add>
+		</operation>
+	</file>
+
+
+	<file path="catalog/view/theme/*/template/product/category.tpl">
+		<operation>
+			<search ><![CDATA[<div class="col-sm-6 text-right"><?php echo $results; ?></div>]]></search>
+			<add position="after">
+				<![CDATA[<br><br><br><input type="hidden" id="description_content" value="<?php echo htmlspecialchars($description);?>" data-value="<?php echo strip_tags($description);?>">
+        <div id="description"><?php echo $description;?></div>
+        <script type="text/javascript">
+  description = $('#description_content').val();
+  desc = description.substr(0,1000);
+  $(function() {
+    if($('#description_content').attr('data-value').length > 1000){
+      hide();
+    }
+  })
+
+  function hide() {
+    $('#description').html(desc+'...<a href="javascript:;" onclick="show()" style="color:#e1a066">MORE</a>');
+  }
+
+  function show() {
+    $('#description').html(description+'<br /><a href="javascript:;" onclick="hide()" style="color:#e1a066">LESS</a>');
+  }
+</script>]]>
+			</add>
+		</operation>
+	</file>
+
+
+</modification>
