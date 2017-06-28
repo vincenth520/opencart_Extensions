@@ -15,4 +15,4 @@ we used on opencart version 2.0.1.1,because it has modules,The latest version do
 - open catlog/Categories,Then you can choose a category at will,edit it,You'll find that you have more than one left_keywords. You can fill in the keyword (HTML format) in this area, and then save it, and you'll find a more than one column of category keyword on the left of the category in the foreground
 ## Effect preview
 ![](http://image.videaba.com/Fj_5-z8O-4T-6k0nDUTXUTMJ7Vap)
-![](http://www.luvial.cn/ueditor/php/upload/image/20170628/1498622748108391.png)
+![](http://www.luvial.cn/ueditor/php/upload/image/20170628/1498622845117218.png)
