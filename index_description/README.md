@@ -1,6 +1,6 @@
-## What is category_keywords
+## What is index_description
 
-category_keywords is a Extensions for category,It creates an area of hot keywords in left_column, which promotes SEO and extracts hot keywords from the category
+index_description is a home page and each column page shows the site of the plug-in, he can display a title at the bottom of the site, when you click the title will show the content, greatly enhance the SEO effect
 
 ## Version Requirements
 
@@ -10,9 +10,10 @@ we used on opencart version 2.0.1.1,because it has modules,The latest version do
 
 ## How to use it?
 
-- open Extension Installer,upload category_keywords.ocmod.zip(If you do not set up FTP, set FTP first)  
+- open Extension Installer,upload index_description.ocmod.xml  
 - open Modifications,reflash Modifications
-- open catlog/Categories,Then you can choose a category at will,edit it,You'll find that you have more than one left_keywords. You can fill in the keyword (HTML format) in this area, and then save it, and you'll find a more than one column of category keyword on the left of the category in the foreground
+- open system/setting,editing site,You can see more of a Index Descript Title and a Index Descript, you can enter the title you want to, then you go to the web page you will find the bottom of a title, click the display content
 ## Effect preview
-![](http://image.videaba.com/Fj_5-z8O-4T-6k0nDUTXUTMJ7Vap)
-![](http://www.luvial.cn/ueditor/php/upload/image/20170628/1498622845117218.png?i=1)
+![](http://pic.96weixin.com/upload/image2/vip/398001/1707/1707068370.png)
+![](http://pic.96weixin.com/upload/image2/vip/398001/1707/1707068016.png)
+![](http://pic.96weixin.com/upload/image2/vip/398001/1707/1707061446.png)
