@@ -1,0 +1,14 @@
+<modification>
+    <name>popular page 插件</name>
+	<version>1.1.1</version>
+	<link>http://www.luvial.cn</link>
+	<author>Vincent</author>
+	<code>popular_page_ocmod</code>
+
+	<file path="catalog/view/theme/default/template/common/footer.tpl">
+		<operation>
+			<search ><![CDATA[<li><a href="<?php echo $sitemap; ?>"><?php echo $text_sitemap; ?></a></li>]]></search>
+			<add position="after"><![CDATA[<li><a href="index.php?route=module/popular">Popular page</a></li>]]></add>
+		</operation>
+	</file>	
+</modification>

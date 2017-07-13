@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+    <id>choose_credit</id>
+	<version>1.1.1</version>
+	<vqmver>2.5.1</vqmver>
+	<author>Vincent</author>
+
+	<file name="catalog/controller/checkout/cart.php">
+		<operation>
+			<search position="before"><![CDATA[if ($this->config->get($result['code'] . '_status')) {]]></search>
+			<add>
+				<![CDATA[if($result['code'] == 'credit'){
+						continue;
+					}]]>
+			</add>
+		</operation>
+	</file>
+</modification>
