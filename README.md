@@ -9,6 +9,15 @@
 This is some of the plug-ins I developed for Opencart at work,If you like trouble, give it to star(`工作中生产需要制作的opencart插件，一直更新，喜欢的给个star`)
 
 
+## Donate
+
+You can also donate me for a coffee, and I'll do better. Thanks.
+
+|                                                                     PayPal                                                                     |                                 Wechat Pay                                  |                                   Alipay                                    |
+|:----------------------------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------:|:---------------------------------------------------------------------------:|
+| [![PayPal](https://www.paypalobjects.com/webstatic/paypalme/images/pp_logo_small.png)<br>Donate via PayPal ](paypal.me/vincenth520) | ![wechat](http://pic.96weixin.com/upload/image2/vip/398001/1707/1707141710.png) | ![alipay](http://pic.96weixin.com/upload/image2/vip/398001/1707/1707148894.png) |
+
+
 # Something the matter
 You can find me in the following way
 - email[[1091986039@qq.com](mailto:1091986039@qq.com)]
