@@ -1,0 +1,127 @@
+<modification>
+	<id><![CDATA[Watermark]]></id>
+	<version><![CDATA[1.0]]></version>
+	<vqmver><![CDATA[1.0]]></vqmver>
+	<author><![CDATA[Watermark]]></author>
+	<file name="system/library/image.php">
+		<operation>
+			<search position="before"><![CDATA[public function watermark]]></search>
+			<add><![CDATA[
+	
+			public function custom_watermark($watermark_image,$position) {
+				
+				$rootpath = substr(DIR_APPLICATION, 0, strrpos(DIR_APPLICATION, '/', -2)) . '/';
+										
+				switch(substr($watermark_image, strrpos($watermark_image, '.')+1)){
+					case 'png':
+						$watermark = imagecreatefrompng($rootpath . 'image/'. $watermark_image);
+						break;
+					case 'jpg':
+						$watermark = imagecreatefromjpeg($rootpath . 'image/'. $watermark_image);
+						break;
+					case 'jpeg':
+						$watermark = imagecreatefromjpeg($rootpath . 'image/'. $watermark_image);
+						break;
+					case 'gif':
+						$watermark = imagecreatefromgif($rootpath . 'image/'. $watermark_image);
+						break;
+					case 'bmp':
+						$watermark = imagecreatefromwbmp($rootpath . 'image/'. $watermark_image);
+						break;
+				}
+								
+				if (isset($watermark)) {
+					$watermark_width 	= imagesx($watermark);
+					$watermark_height 	= imagesy($watermark);					
+				}
+			
+				// Watermark Resizing
+				$imageWidth = $this->getwidth();
+
+				$info = getimagesize($rootpath . 'image/'. $watermark_image);
+				$targetWidth = $info[0];
+				if ($imageWidth < $watermark_width) {
+					$ratio = $targetWidth/$watermark_width;
+					
+					$watermark_ratio = $watermark_width/$watermark_height;
+					
+					$watermark_new_width = ($ratio <= 1) ? $imageWidth*$ratio : $imageWidth/$ratio;
+					
+					$watermark_new_height = $watermark_new_width/$watermark_ratio;
+					
+					
+					$temp_image= imagecreatetruecolor($watermark_new_width, $watermark_new_height);
+					$coloralpha = imagecolorallocatealpha($temp_image,0x00,0x00,0x00,127); 
+					imagefill($temp_image, 0, 0, $coloralpha);
+					imagecopyresampled($temp_image, $watermark, 0, 0, 0, 0, $watermark_new_width, $watermark_new_height, $watermark_width, $watermark_height);
+					$watermark_width = $watermark_new_width;
+					$watermark_height = $watermark_new_height;
+					$watermark = $temp_image;
+				}
+				
+				if (isset($watermark)) {
+					switch($position) {	//applying position
+						case 'TopLeft':
+							$watermark_start_x = 0;
+							$watermark_start_y = 0;
+							break;
+						case 'TopRight':
+							$watermark_start_x = $this->getwidth() - $watermark_width;
+							$watermark_start_y = 0;
+							break;
+						case 'Center':
+							$watermark_start_x = floor($this->getwidth()/2 - $watermark_width/2);
+							$watermark_start_y = floor($this->getheight()/2 - $watermark_height/2);;
+							break;
+						case 'BottomLeft':
+							$watermark_start_x = 0;
+							$watermark_start_y = $this->getheight() - $watermark_height;
+							break;
+						case 'BottomRight':
+							$watermark_start_x = $this->getwidth() - $watermark_width;
+							$watermark_start_y = $this->getheight() - $watermark_height;
+							break;
+					}
+					
+					imagecopy($this->image, $watermark, $watermark_start_x, $watermark_start_y, 0, 0, $watermark_width, $watermark_height);
+					
+					imagedestroy($watermark);
+				}
+			}
+			]]></add>
+		</operation>
+	</file>
+	<file name="catalog/model/tool/image.php">
+		<operation>
+			<search position="after"><![CDATA[$image->resize($width, $height]]></search>
+			<add><![CDATA[$this->load->model('module/watermark');
+	
+					if($this->config->get('watermark_status'))
+					{
+						$applySetting = $this->model_module_watermark->getApplySetting(); //get Watermark Apply Settings
+						
+						$current_store_id = $this->config->get('config_store_id');
+						
+						if($applySetting && isset($applySetting[$current_store_id]))
+						{
+							$current_store_watermark = $applySetting[$current_store_id];
+							
+							
+							if($this->model_module_watermark->isProduct($filename))
+							{
+								$image->custom_watermark($current_store_watermark['image'],$current_store_watermark['position']);									
+							}		
+						}
+			}]]>
+			</add>
+		</operation>
+		<operation error="skip">
+			<search position="replace"><![CDATA[if ($width_orig != $width || $height_orig != $height) {]]></search>
+			<add><![CDATA[if (true) {]]></add>
+		</operation>
+		<operation>
+			<search position="replace"><![CDATA['.' . $extension]]></search>
+			<add><![CDATA['_' . $this->config->get('config_store_id') . '.' . $extension]]></add>
+		</operation>
+	</file>
+</modification>
