@@ -13,4 +13,8 @@ This is some of the plug-ins I developed for Opencart at work,If you like troubl
 You can find me in the following way
 - email[[1091986039@qq.com](mailto:1091986039@qq.com)]
 - qq[1091986039]
+<<<<<<< HEAD
 - wechat[1091986039]
+=======
+- wechat[1091986039]
+>>>>>>> 7207535ef59a29258e61314b95ef47828636274e
