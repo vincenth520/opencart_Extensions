@@ -11,5 +11,5 @@ This is a plug-in to add watermarks to the picture(`这是一个给图片添加�
 
 # Effect preview
 
-![Effect preview](http://pic.96weixin.com/upload/image2/vip/398001/1707/1707154736.png)]
-![Effect preview](http://pic.96weixin.com/upload/image2/vip/398001/1707/1707158581.png)]
+![Effect preview](http://pic.96weixin.com/upload/image2/vip/398001/1707/1707154736.png)
+![Effect preview](http://pic.96weixin.com/upload/image2/vip/398001/1707/1707158581.png)
