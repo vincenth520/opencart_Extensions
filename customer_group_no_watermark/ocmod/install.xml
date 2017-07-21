@@ -1,0 +1,166 @@
+<modification>
+    <name>customer_group_no_watermark</name>
+	<version>1.1.1</version>
+	<link>http://www.luvial.cn</link>
+	<author>Vincent H</author>
+	<code>customer_group_no_watermark</code>
+
+	<file path="admin/view/template/customer/customer_group_form.tpl">
+		<operation>
+			<search ><![CDATA[<label class="col-sm-2 control-label" for="input-sort-order"><?php echo $entry_sort_order; ?></label>]]></search>
+			<add position="before">
+				<![CDATA[
+					<label class="col-sm-2 control-label" for="input-sort-order">No watermark num</label>
+						<div class="col-sm-10">
+						  <input type="text" name="customer_group_description[<?php echo $language['language_id']; ?>][no_watermark_num]" value="<?php echo isset($customer_group_description[$language['language_id']]) ? $customer_group_description[$language['language_id']]['no_watermark_num'] : ''; ?>" placeholder="No watermark num" id="input-sort-order" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+				]]>
+			</add>
+		</operation>
+	</file>
+	<file path="admin/model/customer/customer_group.php">
+		<operation>
+			<search ><![CDATA['description' => $result['description']]]></search>
+			<add position="replace">
+				<![CDATA[
+					'no_watermark_num' => $result['no_watermark_num'],'description' => $result['description']
+				]]>
+			</add>
+		</operation>
+		<operation>
+			<search ><![CDATA[description = '" . $this->db->escape($value['description']) . "']]></search>
+			<add position="replace">
+				<![CDATA[
+					no_watermark_num = '" . $this->db->escape($value['no_watermark_num']) . "',description = '" . $this->db->escape($value['description']) . "'
+				]]>
+			</add>
+		</operation>
+	</file>
+
+
+	<file path="admin/view/template/customer/customer_form.tpl">
+		<operation>
+			<search ><![CDATA[<label class="col-sm-2 control-label" for="input-safe"><?php echo $entry_safe; ?></label>]]></search>
+			<add position="before">
+				<![CDATA[
+					<label class="col-sm-2 control-label" for="input-sort-order">No watermark num</label>
+						<div class="col-sm-10">
+						  <input type="text" name="no_watermark_num" value="<?php echo $no_watermark_num; ?>" placeholder="Already used No watermark num" id="input-sort-order" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+					<label class="col-sm-2 control-label" for="input-sort-order">No watermark</label>
+						<div class="col-sm-10">
+							<select name="nowatermark" id="input-customer-group" class="form-control">
+		                        <option value="0" <?php echo ($nowatermark == 0)?'selected="selected"':''; ?>>NO</option>
+                                <option value="1" <?php echo ($nowatermark == 1)?'selected="selected"':''; ?>>YES</option>
+		                    </select>
+						</div>
+					</div>
+					<div class="form-group">
+				]]>
+			</add>
+		</operation>
+	</file>
+	<file path="admin/model/customer/customer.php">
+		<operation>
+			<search ><![CDATA[safe = '" . (int)$data['safe'] . "']]></search>
+			<add position="replace">
+				<![CDATA[
+					safe = '" . (int)$data['safe'] . "',no_watermark_num = '" . (int)$data['no_watermark_num'] . "',nowatermark = '" . (int)$data['nowatermark'] . "'
+				]]>
+			</add>
+		</operation>
+	</file>
+
+	<file path="admin/controller/customer/customer.php">
+		<operation>
+			<search ><![CDATA[if (isset($this->request->post['fax'])) {]]></search>
+			<add position="before">
+				<![CDATA[
+					if (isset($this->request->post['no_watermark_num'])) {
+						$data['no_watermark_num'] = $this->request->post['no_watermark_num'];
+					} elseif (!empty($customer_info)) {
+						$data['no_watermark_num'] = $customer_info['no_watermark_num'];
+					} else {
+						$data['no_watermark_num'] = '';
+					}
+					if (isset($this->request->post['nowatermark'])) {
+						$data['nowatermark'] = $this->request->post['nowatermark'];
+					} elseif (!empty($customer_info)) {
+						$data['nowatermark'] = $customer_info['nowatermark'];
+					} else {
+						$data['nowatermark'] = '';
+					}
+				]]>
+			</add>
+		</operation>
+	</file>
+
+
+	<file path="catalog/view/theme/*/template/product/product.tpl">
+		<operation>
+			<search ><![CDATA[<div class="tab-view">]]></search>
+			<add position="before">
+				<![CDATA[
+					<p style="margin-left:14px;"><a href="product/downloadimage?product_id=<?php echo $product_id;?>"><i class="glyphicon glyphicon-gift"></i>Download Image</a></p>
+				]]>
+			</add>
+		</operation>
+		<operation>
+			<search ><![CDATA[<?php echo $header; ?>]]></search>
+			<add position="after">
+				<![CDATA[
+					<?php if ($error_warning) { ?>
+<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?></div>
+<?php } ?>
+				]]>
+			</add>
+		</operation>
+	</file>
+
+
+
+	<file path="catalog/controller/product/product.php">
+		<operation>
+			<search ><![CDATA[$this->model_catalog_product->updateViewed($this->request->get['product_id']);]]></search>
+			<add position="after">
+				<![CDATA[
+					$data['error_warning'] = '';
+					if(isset($this->request->get['error'])){
+						if($this->request->get['error'] == 'nodownload'){
+							$data['error_warning'] = 'Your can not download product image any more.';
+						}
+					}
+				]]>
+			</add>
+		</operation>
+	</file>
+
+
+	<file path="system/library/customer.php">
+		<operation>
+			<search ><![CDATA[if (!$query->num_rows) {]]></search>
+			<add position="before">
+				<![CDATA[					
+					if($customer_query->row['no_watermark_clear_month'] != date('m')){
+						$this->db->query("update " . DB_PREFIX . "customer set no_watermark_clear_month = '".date('m')."',no_watermark_num = 0  WHERE customer_id = '" . $customer_query->row['customer_id'] . "' AND status = '1'");
+					}
+				]]>
+			</add>
+		</operation>
+	</file>
+
+	<file path="admin/model/catalog/product.php">
+		<operation>
+			<search ><![CDATA[foreach ($data['product_image']]]></search>
+			<add position="before">
+				<![CDATA[					
+					unlink('../imgzip/'.MD5($product_id) . ".zip");
+				]]>
+			</add>
+		</operation>
+	</file>
+</modification>
