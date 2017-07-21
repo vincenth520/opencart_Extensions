@@ -107,7 +107,7 @@
 							$current_store_watermark = $applySetting[$current_store_id];
 							
 							
-							if($this->model_module_watermark->isProduct($filename))
+							if($this->model_module_watermark->isProduct($filename)  && $now_image != $new_image)
 							{
 								$image->custom_watermark($current_store_watermark['image'],$current_store_watermark['position']);									
 							}		
@@ -122,6 +122,21 @@
 		<operation>
 			<search position="replace"><![CDATA['.' . $extension]]></search>
 			<add><![CDATA['_' . $this->config->get('config_store_id') . '.' . $extension]]></add>
+		</operation>
+
+		<operation>
+			<search position="before"><![CDATA[if (!is_file(DIR_IMAGE . $new_image) ||]]></search>
+			<add><![CDATA[
+				$now_image = 'cache/' . utf8_substr($filename, 0, utf8_strrpos($filename, '.')) . '-' . $width . 'x' . $height . '_' . $this->config->get('config_store_id') . '_'.md5(utf8_substr($filename, 0, utf8_strrpos($filename, '.'))).'.' . $extension;
+				if($this->customer->isLogged()){
+					$customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE customer_id = '" . $this->customer->getId() . "' AND status = '1'");
+
+					if(@$customer_query->row['nowatermark'] == 1){
+						$new_image = $now_image;
+					}
+
+				}
+				]]></add>
 		</operation>
 	</file>
 </modification>
