@@ -19,6 +19,6 @@ customer_group_no_watermark Is a member of the level of access to the number of 
 
 ![](http://image.135editor.com/files/users/260/2601023/201707/USgBNSA9_6mYc.png)
 
-![](http://image.135editor.com/files/users/260/2601023/201707/Sc7np7Db_JvQK.png)
+![](http://image.135editor.com/files/users/260/2601023/201707/Sc7np7Db_JvQK.png?i=1)
 
 ![](http://image.135editor.com/files/users/260/2601023/201707/LKkppfeD_EUBO.png)
