@@ -1,0 +1,14 @@
+<modification>
+	<id><![CDATA[Qucikorder]]></id>
+	<version><![CDATA[1.0]]></version>
+	<vqmver><![CDATA[1.0]]></vqmver>
+	<author><![CDATA[Qucikorder]]></author>
+	<file name="catalog/view/theme/*/template/common/header.tpl">
+		<operation>
+			<search position="before"><![CDATA[</header>]]></search>
+			<add><![CDATA[
+				<p style="position: relative;"><a href="product/Advancedquickorder/" title="Quick Order" class="top-link-advancedquickorder" id="top-link-advancedquickorder" style="position: absolute;right: 10px;top: -30px;z-index: 99;">Quick Order</a></p>
+			]]></add>
+		</operation>
+	</file>
+</modification>
