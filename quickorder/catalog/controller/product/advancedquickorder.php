@@ -1,10 +1,6 @@
 <?php
 class ControllerproductAdvancedquickorder extends Controller {
 	public function index() {
-		if (!$this->customer->isLogged()) {
-			$this->session->data['redirect'] = $this->url->link('product/Advancedquickorder', 'SSL');
-			$this->response->redirect($this->url->link('account/login', '', 'SSL'));
-		}
 
 		$data['breadcrumbs'] = array();
 
