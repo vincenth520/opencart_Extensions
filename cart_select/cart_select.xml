@@ -1,0 +1,128 @@
+<modification>
+	<id><![CDATA[cart_select]]></id>
+	<version><![CDATA[1.0]]></version>
+	<vqmver><![CDATA[1.0]]></vqmver>
+	<author><![CDATA[cart_select]]></author>
+	<file name="catalog/view/theme/*/template/checkout/cart.tpl">
+		<operation>
+			<search position="before"><![CDATA[<td class="text-center"><?php echo $column_image; ?></td>]]></search>
+			<add><![CDATA[
+				<td class="text-center"></td>
+			]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[<td class="text-center"><?php if ($product['thumb']) { ?>]]></search>
+			<add><![CDATA[
+				<td class="text-center"><input type="checkbox" class="ckb" data="<?php echo $product['cart_id']; ?>"></td>
+			]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[</form>]]></search>
+			<add><![CDATA[
+				<p style="text-align: right"><span class="btn" style="margin:5px; background: #c10002;color: #fff" onclick="removeselected()">Removed selected</span><span class="btn" style="margin:5px; background: #c10002;color: #fff" onclick="clearAll()">Clear Shopping cart</span><button type="submit" class="btn" style="margin:5px; background: #c10002;color: #fff"  data-toggle="tooltip" title="" class="btn btn-primary">Update Selected</button>
+        </p>
+			]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[<?php echo $footer; ?>]]></search>
+			<add><![CDATA[
+				<script type="text/javascript">
+  function removeselected() {
+    $('.ckb').each(function(i,j){
+      if($(j).is(":checked")){
+        cart1.remove($(j).attr('data'));
+      }
+    })
+    location.reload();
+    return false;
+  }
+
+  function clearAll() {
+    $('.ckb').each(function(i,j){
+        cart1.remove($(j).attr('data'));
+    })
+    location.reload();
+    return false;
+  }
+
+  var cart1 = {
+  'add': function(product_id, quantity) {
+    $.ajax({
+      url: 'index.php?route=checkout/cart/add',
+      type: 'post',
+      data: 'product_id=' + product_id + '&quantity=' + (typeof(quantity) != 'undefined' ? quantity : 1),
+      dataType: 'json',
+      beforeSend: function() {
+        $('#cart > button').button('loading');
+      },
+      complete: function() {
+        $('#cart > button').button('reset');
+      },      
+      success: function(json) {
+        $('.alert, .text-danger').remove();
+
+        if (json['redirect']) {
+          location = json['redirect'];
+        }
+
+        if (json['success']) {
+          $('body').before('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+          
+          // Need to set timeout otherwise it wont update the total
+          setTimeout(function () {
+            $('#cart > button').html('<span id="cart-total">' + json['total'] + '</span>');
+          }, 100);
+        
+          $('html, body').animate({ scrollTop: 0 }, 'slow');
+
+          $('#cart  ul').load('index.php?route=common/cart/info ul li');
+        }
+      }
+    });
+  },
+  'update': function(key, quantity) {
+    $.ajax({
+      url: 'index.php?route=checkout/cart/edit',
+      type: 'post',
+      data: 'key=' + key + '&quantity=' + (typeof(quantity) != 'undefined' ? quantity : 1),
+      dataType: 'json',
+      beforeSend: function() {
+        $('#cart  > button').button('loading');
+      },
+      complete: function() {
+        $('#cart > button').button('reset');
+      },      
+      success: function(json) {
+        // Need to set timeout otherwise it wont update the total
+        setTimeout(function () {
+          $('#cart > button').html('<span id="cart-total">' + json['total'] + '</span>');
+        }, 100);
+      }
+    });
+  },
+  'remove': function(key) {
+    $.ajax({
+      url: 'index.php?route=checkout/cart/remove',
+      type: 'post',
+      data: 'key=' + key,
+      dataType: 'json',
+      beforeSend: function() {
+        $('#cart > button').button('loading');
+      },
+      complete: function() {
+        $('#cart > button').button('reset');
+      },      
+      success: function(json) {
+        // Need to set timeout otherwise it wont update the total
+        setTimeout(function () {
+          $('#cart > button').html('<span id="cart-total">' + json['total'] + '</span>');
+        }, 100);
+      }
+    });
+  }
+}
+</script>
+			]]></add>
+		</operation>
+	</file>
+</modification>
