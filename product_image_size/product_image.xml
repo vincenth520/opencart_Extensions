@@ -1,0 +1,20 @@
+<modification>
+	<id><![CDATA[product_image_size]]></id>
+	<version><![CDATA[1.0]]></version>
+	<vqmver><![CDATA[1.0]]></vqmver>
+	<author><![CDATA[Vincent]]></author>
+	<file name="catalog/model/module/product_option_image_pro.php">
+		<operation>
+			<search position="replace"><![CDATA[$icon_height = round(($image_product_height)/4-6);]]></search>
+			<add><![CDATA[
+				$icon_height = 40;
+			]]></add>
+		</operation>
+    <operation>
+      <search position="replace"><![CDATA[$icon_width = round(($image_product_width)/4-6);]]></search>
+      <add><![CDATA[
+        $icon_width = 40;
+      ]]></add>
+    </operation>
+  </file>
+</modification>
