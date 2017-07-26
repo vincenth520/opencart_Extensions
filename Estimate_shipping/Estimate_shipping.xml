@@ -1,0 +1,140 @@
+<modification>
+	<id><![CDATA[Estimate_shipping]]></id>
+	<version><![CDATA[1.0]]></version>
+	<vqmver><![CDATA[1.0]]></vqmver>
+	<author><![CDATA[Vincent]]></author>
+	<file name="catalog/view/theme/*/template/product/product.tpl">
+		<operation>
+			<search position="after"><![CDATA[<div class="tab-pane fade" id="product_tabs_custom">]]></search>
+			<add><![CDATA[
+				
+        <p><br></p>
+        <h2>Estimate shipping</h2>
+        <p>Ship my order(s) to <select id="country"> <?php foreach ($countries as $country) { ?>
+              <option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
+              <?php } ?></select></p>
+            <div style="display: block;line-height: 44px;"><span style="float: left;">Weight:<?php echo round($weight, 3); ?>kg X &nbsp;</span><div class="input-group" style="width: 100px;float: left"><div class="input-group-addon" style="display: inline;    padding: 0px 9px 2px 9px;cursor: pointer;" onclick="reduce()">-</div>
+      <input type="text" id="exampleInputAmount" value="1" style="width: 40px;padding: 0;line-height: 0;" onkeyup="this.value=this.value.replace(/\D/g,'')" maxlength="6">
+      <div class="input-group-addon" style="display: inline;    padding: 0px 9px 2px 9px;cursor: pointer;" onclick="add()">+</div>
+    </div><span>=<span id="result"><?php echo round($weight, 3); ?></span>kg</span></div>
+    <p id="loading" style="color:red;display:none">Loading...</p>
+    <div id="estimate"></div>
+      <script type="text/javascript">
+      	$(function(){
+      		getResult();
+      	})
+        $('#exampleInputAmount').blur(function(){
+          getResult();
+        })
+
+        $('#country').change(function(){
+          getResult();
+        })
+
+        function getResult(){
+          $('#loading').show();
+          var weight = new Number((<?php echo round($weight, 3);?>)*$('#exampleInputAmount').val()).toFixed(2);
+          $('#result').html(weight);
+          $.get('checkout/shipping_method/estimate?shipping_address[country_id]='+$('#country option:checked').val()+'&weight='+weight,function(data){
+          	$('#estimate').html(data);
+          	$('#loading').hide();
+          })
+        }
+
+        function reduce(){
+          ($('#exampleInputAmount').val()>1)?$('#exampleInputAmount').val($('#exampleInputAmount').val()-1):1;
+          getResult();
+        }
+
+        function add(){
+          $('#exampleInputAmount').val(parseInt($('#exampleInputAmount').val())+1);
+          getResult();
+        }
+      </script>
+        <p><br></p>
+			]]></add>
+		</operation>
+	</file>
+
+  <file name="catalog/controller/product/product.php">
+    <operation>
+      <search position="after"><![CDATA[$results = $this->model_catalog_product->getProductRelated($this->request->get['product_id']);]]></search>
+      <add><![CDATA[
+        $this->load->model('localisation/country');
+        $data['countries'] = $this->model_localisation_country->getCountries();
+      ]]></add>
+    </operation>
+  </file>
+
+
+  <file path="catalog/model/shipping/*.php" error="skip">
+	<operation error="skip">
+      <search position="replace"><![CDATA[getQuote($address)]]></search>
+      <add><![CDATA[
+        getQuote($address,$Pweight='')
+      ]]></add>
+    </operation>
+    <operation error="skip">
+      <search position="replace"><![CDATA[$this->cart->getWeight()]]></search>
+      <add><![CDATA[
+        ($Pweight == '')?$this->cart->getWeight():$Pweight;
+      ]]></add>
+    </operation>
+  </file>
+
+
+  <file name="catalog/controller/checkout/shipping_method.php">
+    <operation>
+      <search position="before"><![CDATA[public function save() {]]></search>
+      <add><![CDATA[
+        public function estimate() {
+		$this->load->language('checkout/checkout');
+
+		if (isset($this->request->get['shipping_address'])) {
+			// Shipping Methods
+			$method_data = array();
+
+			$this->load->model('extension/extension');
+
+			$results = $this->model_extension_extension->getExtensions('shipping');
+
+			foreach ($results as $result) {
+				if ($this->config->get($result['code'] . '_status')) {
+					$this->load->model('shipping/' . $result['code']);
+
+					$quote = $this->{'model_shipping_' . $result['code']}->getQuote($this->request->get['shipping_address'],$this->request->get['weight']);
+
+					if ($quote) {
+						$method_data[$result['code']] = array(
+							'title'      => $quote['title'],
+							'quote'      => $quote['quote'],
+							'sort_order' => $quote['sort_order'],
+							'error'      => $quote['error']
+						);
+					}
+				}
+			}
+			$sort_order = array();
+
+			foreach ($method_data as $key => $value) {
+				$sort_order[$key] = $value['sort_order'];
+			}
+
+			array_multisort($sort_order, SORT_ASC, $method_data);
+
+		}
+		$str = '<style>td{border: 1px solid #ccc;padding:5px;text-align:center}</style><table style="width:100%"><tr><td>Shiping Method</td><td>Estimated Delivery Time</td><td>Shipping Cost</td></tr>';
+		foreach($method_data as $value){
+			foreach($value['quote'] as $v){
+				$str .= '<tr><td>'.$v['title'].'</td><td>'.$v['desc'].'</td><td>'.$v['text'].'</td></tr>';
+			}
+		}
+		$str .= '</table>';
+		echo $str;
+	}
+      ]]></add>
+    </operation>
+  </file>
+
+
+</modification>
