@@ -1,0 +1,37 @@
+<modification>
+	<id><![CDATA[Estimate_shipping]]></id>
+	<version><![CDATA[1.0]]></version>
+	<vqmver><![CDATA[1.0]]></vqmver>
+	<author><![CDATA[Vincent]]></author>
+	<file name="admin/view/template/sale/order_list.tpl">
+		<operation>
+			<search position="replace"><![CDATA[ <a href="<?php echo $sort_total; ?>"><?php echo $column_total; ?></a>]]></search>
+			<add><![CDATA[
+				<a href="<?php echo $sort_total; ?>"><?php echo $column_total; ?>(based)</a>
+                    <?php }
+                    if(1){ ?></td>
+				<td class="text-right">
+                    <a href="<?php echo $sort_total; ?>"><?php echo $column_total; ?>(Actual payment)</a>
+                </td>
+			]]></add>
+		</operation>
+		<operation>
+			<search position="replace"><![CDATA[<td class="text-right"><?php echo $order['total']; ?></td>]]></search>
+			<add><![CDATA[
+				<td class="text-right"><?php echo '$'.$order['usd']; ?></td>
+				<td class="text-right"><?php echo $order['total']; ?></td>
+			]]></add>
+		</operation>
+	</file>
+
+  <file name="admin/controller/sale/order.php">
+    <operation>
+      <search position="replace"><![CDATA['status'        => $result['status'],]]></search>
+      <add><![CDATA[
+        'status'        => $result['status'],
+        'usd'           => $result['total'],
+      ]]></add>
+    </operation>
+  </file>
+
+</modification>
