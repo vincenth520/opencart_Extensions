@@ -5,6 +5,8 @@ class ModelTotalCredit extends Model {
 			$this->load->language('total/credit');
 			if(isset($this->session->data['credit'])){
 				$useCredit = $this->session->data['credit'];
+			}else{
+				$useCredit = 0;
 			}
 			$balance = $this->customer->getBalance();
 
