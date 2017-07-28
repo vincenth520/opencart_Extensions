@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+    <id>choose_credit</id>
+    <version>1.1.1</version>
+    <vqmver>2.5.1</vqmver>
+    <author>Vincent</author>
+
+    <file name="catalog/view/theme/misscloth/template/checkout/cart.tpl">
+        <operation>
+            <search position="before"><![CDATA[<?php echo $coupon; ?>]]></search>
+            <add>
+                <![CDATA[<style type="text/css">
+        .checkout-cart #button-credit {
+            border: 1px solid #ddd;
+            padding: 8px 15px 7px;
+            background: #fff;
+            margin-left: -1px;
+            font-size: 11px;
+            color: #333;
+            font-weight: bold;
+        }
+      </style>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+        <h4 class="panel-title"><a href="#collapse-credit" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" aria-expanded="true">Use Credit <i class="fa fa-caret-down"></i></a></h4>
+        </div>
+        <div id="collapse-credit" class="panel-collapse collapse" aria-expanded="true">
+        <div class="panel-body">
+        <label class="col-sm-2 control-label" for="input-credit">Enter credit here</label>
+        <div class="input-group">
+        <input type="text" name="credit" value="" placeholder="Enter your credit here" id="input-credit" class="form-control">
+        <span class="input-group-btn">
+        <input type="button" value="Apply Credit" id="button-credit" data-loading-text="Loading..." class="button">
+        </span></div>
+        <script type="text/javascript"><!--
+        $('#button-credit').on('click', function() {
+          $.ajax({
+            url: 'index.php?route=d_quickcheckout/cart/updateCredit',
+            type: 'post',
+            data: 'credit=' + encodeURIComponent($('input[name=\'credit\']').val()),
+            dataType: 'json',
+            beforeSend: function() {
+              $('#button-credit').button('loading');
+            },
+            complete: function() {
+              $('#button-credit').button('reset');
+            },
+            success: function(json) {
+              location.reload();
+            }
+          });
+        });
+        //--></script>
+        </div>
+        </div>
+        </div>                    
+      ]]>
+            </add>
+        </operation>
+    </file>
+</modification>
