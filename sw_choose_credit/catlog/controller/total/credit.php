@@ -12,6 +12,8 @@ class ControllerTotalCredit extends Controller {
 
 			$data['button_credit'] = 'Apply Credit';
 
+        	$data['balance'] = $this->customer->getBalance();
+			
 			if (isset($this->session->data['credit'])) {
 				$data['credit'] = $this->session->data['credit'];
 			} else {

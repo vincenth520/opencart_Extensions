@@ -6,7 +6,7 @@
     <div class="panel-body">
       <label class="col-sm-2 control-label" for="input-credit"><?php echo $entry_credit; ?></label>
       <div class="input-group">
-        <input type="text" name="credit" value="<?php echo $credit; ?>" placeholder="<?php echo $entry_credit; ?>" id="input-credit" class="form-control" />
+        <input type="text" name="credit" value="<?php echo $credit; ?>" placeholder="You have $<?php echo round($balance,2); ?> credit" id="input-credit" class="form-control" />
         <span class="input-group-btn">
         <input type="button" value="<?php echo $button_credit; ?>" id="button-credit" data-loading-text="<?php echo $text_loading; ?>"  class="btn btn-primary" />
         </span></div>
