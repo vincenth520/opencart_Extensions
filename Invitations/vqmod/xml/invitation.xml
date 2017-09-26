@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+    <id>Invitation</id>
+	<version>1.1.1</version>
+	<vqmver>2.5.1</vqmver>
+	<author>Vincent</author>
+
+	<file name="catalog/controller/common/home.php">
+		<operation position="replace">
+			<search><![CDATA[$data['column_left'] = $this->load->controller('common/column_left');]]></search>
+			<add><![CDATA[				
+				$data['column_left'] = $this->load->controller('common/column_left');
+				if (!$this->customer->isLogged() && isset($this->request->get['invite'])) {
+					$this->session->data['invite'] = $this->request->get['invite'];
+				}
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/controller/account/register.php">
+		<operation position="replace">
+			<search><![CDATA[$customer_id = $this->model_account_customer->addCustomer($this->request->post);]]></search>
+			<add><![CDATA[
+				$customer_id = $this->model_account_customer->addCustomer($this->request->post);
+				if (isset($this->session->data['invite'])) {
+					$inv['ivid'] = $customer_id;
+					$inv['uid'] = $this->session->data['invite'];
+					$this->load->model('module/invitation');
+					$this->model_module_invitation->addInvitation($inv);
+				}
+			]]></add>
+		</operation>
+	</file>
+
+
+	<file name="catalog/language/english/account/account.php">
+		<operation position="replace">
+			<search ><![CDATA[$_['text_transactions']  = 'Transactions';]]></search>
+			<add><![CDATA[$_['text_transactions']  = 'Transactions';
+				$_['text_invitation']  = 'My Invitation';
+				]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/controller/account/account.php">
+		<operation position="replace">
+			<search ><![CDATA[$data['transaction'] = ]]></search>
+			<add><![CDATA[$data['invitation'] = $this->url->link('module/invitation', '', 'SSL');
+				$data['text_invitation'] = $this->language->get('text_invitation');
+				$data['transaction'] = 
+				]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/view/theme/default/template/account/account.tpl">
+		<operation position="replace">
+			<search ><![CDATA[<li><a href="<?php echo $transaction; ?>"><?php echo $text_transaction; ?></a></li>]]></search>
+			<add><![CDATA[<li><a href="<?php echo $transaction; ?>"><?php echo $text_transaction; ?></a></li>
+			<li><a href="<?php echo $invitation; ?>"><?php echo $text_invitation; ?></a></li>
+				]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/controller/account/register.php">
+		<operation position="replace">
+			<search><![CDATA[$customer_id = $this->model_account_customer->addCustomer($this->request->post);]]></search>
+			<add><![CDATA[
+				$customer_id = $this->model_account_customer->addCustomer($this->request->post);
+				if (isset($this->session->data['invite'])) {
+					$inv['ivid'] = $customer_id;
+					$inv['uid'] = $this->session->data['invite'];
+					$this->load->model('module/invitation');
+					$this->model_module_invitation->addInvitation($inv);
+				}
+			]]></add>
+		</operation>
+	</file>
+
+</modification>
