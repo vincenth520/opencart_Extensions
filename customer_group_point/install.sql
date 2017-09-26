@@ -1,0 +1,1 @@
+ALTER TABLE  `oc_customer_group_description`  ADD  `spend_point` int NOT NULL default 0;

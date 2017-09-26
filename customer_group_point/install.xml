@@ -1,0 +1,44 @@
+<modification>
+    <name>customer_group_point</name>
+	<version>1.1.1</version>
+	<link>http://www.luvial.cn</link>
+	<author>Vincent H</author>
+	<code>customer_group_point</code>
+
+	<file path="admin/view/template/customer/customer_group_form.tpl">
+		<operation>
+			<search ><![CDATA[<label class="col-sm-2 control-label" for="input-sort-order"><?php echo $entry_sort_order; ?></label>]]></search>
+			<add position="before">
+				<![CDATA[
+					<label class="col-sm-2 control-label" for="input-sort-order">Spend More S-Point on Each Order</label>
+						<div class="col-sm-10">
+							<div class="form-inline">	
+						  <input type="text" name="customer_group_description[<?php echo $language['language_id']; ?>][spend_point]" value="<?php echo isset($customer_group_description[$language['language_id']]) ? $customer_group_description[$language['language_id']]['spend_point'] : ''; ?>" placeholder="Spend More S-Point on Each Order" id="input-sort-order" class="form-control" />%
+						</div>
+						</div>
+					</div>
+					<div class="form-group">
+				]]>
+			</add>
+		</operation>
+	</file>
+	<file path="admin/model/customer/customer_group.php">
+		<operation>
+			<search ><![CDATA['description' => $result['description']]]></search>
+			<add position="replace">
+				<![CDATA[
+					'spend_point' => $result['spend_point'],'description' => $result['description']
+				]]>
+			</add>
+		</operation>
+		<operation>
+			<search ><![CDATA[description = '" . $this->db->escape($value['description']) . "']]></search>
+			<add position="replace">
+				<![CDATA[
+					spend_point = '" . $this->db->escape($value['spend_point']) . "',description = '" . $this->db->escape($value['description']) . "'
+				]]>
+			</add>
+		</operation>
+	</file>
+
+</modification>
