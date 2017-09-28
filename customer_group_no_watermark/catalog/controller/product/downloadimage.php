@@ -11,6 +11,7 @@ class ControllerproductDownloadimage extends Controller {
 		$download_history = $this->db->query("SELECT * FROM " . DB_PREFIX . "download_no_watermark WHERE customer_id = '" . $this->customer->getId() . "' AND product_id = '".$this->request->get['product_id']."'");
 
 		if($customer_query->row['no_watermark_num'] == 0 && (!$download_history->num_rows)){  //如果剩余次数为0，并且之前没有下载过，直接返回
+			$this->session->data['error'] = 'Your can not download product image any more.';
 			$this->response->redirect($this->url->link('product/product',  'product_id='.$this->request->get['product_id'], 'SSL'));
 			exit;
 		}
