@@ -1,0 +1,96 @@
+<modification>
+    <name>Product_weight2</name>
+	<version>1.1.1</version>
+	<link>http://www.luvial.cn</link>
+	<author>Vincent</author>
+	<code>Product_weight2_ocmod</code>
+
+	<file path="admin/language/english/catalog/product.php">
+		<operation>
+			<search ><![CDATA[$_['entry_weight']]]></search>
+			<add position="before">
+				<![CDATA[$_['entry_weight2']               = 'Volume weight';]]>
+			</add>
+		</operation>
+	</file>
+
+	<file path="admin/controller/catalog/product.php">
+		<operation>
+			<search ><![CDATA[$data['entry_weight']]]></search>
+			<add position="before">
+				<![CDATA[$data['entry_weight2'] = $this->language->get('entry_weight2');]]>
+			</add>
+		</operation>
+		<operation>
+			<search ><![CDATA[if (isset($this->request->post['weight'])) {]]></search>
+			<add position="before">
+				<![CDATA[if (isset($this->request->post['weight2'])) {
+			$data['weight2'] = $this->request->post['weight2'];
+		} elseif (!empty($product_info)) {
+			$data['weight2'] = $product_info['weight2'];
+		} else {
+			$data['weight2'] = '';
+		}]]>
+			</add>
+		</operation>		
+	</file>
+
+	<file path="admin/view/template/catalog/product_form.tpl">
+		<operation>
+			<search ><![CDATA[<input type="text" name="weight" value="<?php echo $weight; ?>" placeholder="<?php echo $entry_weight; ?>" id="input-weight" class="form-control" />]]></search>
+			<add position="after">
+				<![CDATA[</div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-weight2"><?php echo $entry_weight2; ?></label>
+                <div class="col-sm-10">
+                  <input type="text" name="weight2" value="<?php echo $weight2; ?>" placeholder="<?php echo $entry_weight2; ?>" id="input-weight2" class="form-control" />]]>
+			</add>
+		</operation>
+	</file>
+	<file path="admin/model/catalog/product.php">
+		<operation>
+			<search ><![CDATA[weight = '" . (float)$data['weight'] . "',]]></search>
+			<add position="replace">
+				<![CDATA[weight = '" . (float)$data['weight'] . "',weight2 = '" . (float)$data['weight2'] . "',]]>
+			</add>
+		</operation>
+	</file>
+
+	<file path="catalog/view/theme/*/template/product/product.tpl">		
+		<operation>
+			<search><![CDATA[<li class="desc-info-li">Gross weight: <?php echo round($weight, 3); ?>KG.</li>]]></search>
+			<add position="after">
+				<![CDATA[<li class="desc-info-li">Volume weight: <?php echo round($weight2, 3); ?>KG.</li>]]>
+			</add>
+		</operation>
+	</file>
+	<file path="catalog/controller/product/product.php">		
+		<operation>
+			<search><![CDATA[$product_info['points'];]]></search>
+			<add position="after">
+				<![CDATA[$data['weight2'] = $product_info['weight2'];]]>
+			</add>
+		</operation>
+	</file>
+	<file path="catalog/model/catalog/product.php">		
+		<operation>
+			<search><![CDATA[$query->row['weight'],]]></search>
+			<add position="replace">
+				<![CDATA[$query->row['weight'],
+				'weight2'           => $query->row['weight2'],]]>
+			</add>
+		</operation>
+	</file>
+
+
+	<file path="system/library/cart.php">	
+		<operation>
+			<search><![CDATA[$product_query->row['weight'] ]]></search>
+			<add position="replace">
+				<![CDATA[($product_query->row['weight2'] > $product_query->row['weight'])?$product_query->row['weight2']:$product_query->row['weight']]]>
+			</add>
+		</operation>
+	</file>
+	
+</modification>
