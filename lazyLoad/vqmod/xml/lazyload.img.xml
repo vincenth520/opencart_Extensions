@@ -1,0 +1,41 @@
+<modification>
+	<id><![CDATA[LazyLoad]]></id>
+	<version><![CDATA[1.0]]></version>
+	<vqmver><![CDATA[1.0]]></vqmver>
+	<author><![CDATA[vincent]]></author>
+	<file name="catalog/view/theme/*/template/common/footer.tpl">
+		<operation>
+			<search position="after"><![CDATA[</html>]]></search>
+			<add><![CDATA[	
+				<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+				<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery-lazyload/1.9.5/jquery.lazyload.js"></script>
+				<script type="text/javascript">
+				  $(function() {
+				  	try{
+				    	$("img").lazyload();
+				    }catch(e){
+				    	$("img").each((i)=>{
+				    		if($("img").eq(i).attr('data-original')){
+				    			$("img").eq(i).attr('src',$("img").eq(i).attr('data-original'));
+				    		}
+				    	})
+				    }
+				});
+				</script>
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/view/theme/*/template/product/category.tpl">
+		<operation>
+			<search position="replace"><![CDATA[src="<?php echo $product['thumb']; ?>"]]></search>
+			<add><![CDATA[data-original="<?php echo $product['thumb']; ?>"
+			]]></add>
+		</operation>
+		<operation>
+			<search position="replace"><![CDATA[src="<?php echo $product['rotator_image'] ?>"]]></search>
+			<add><![CDATA[data-original="<?php echo $product['rotator_image'] ?>"]]></add>
+		</operation>
+	</file>
+
+</modification>
