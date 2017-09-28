@@ -70,9 +70,7 @@
   <file path="catalog/model/shipping/*.php" error="skip">
 	<operation error="skip">
       <search position="replace"><![CDATA[getQuote($address)]]></search>
-      <add><![CDATA[
-        getQuote($address,$Pweight='')
-      ]]></add>
+      <add><![CDATA[getQuote($address,$Pweight='')]]></add>
     </operation>
     <operation error="skip">
       <search position="replace"><![CDATA[$this->cart->getWeight()]]></search>
