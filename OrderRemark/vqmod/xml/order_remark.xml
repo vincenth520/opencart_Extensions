@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<modification>
+	<id>order_remark</id>
+	<name>order_remark</name>
+	<author>Vincent</author>
+	<version>1.0.0</version>
+	<vqmver>2.X</vqmver>
+
+	<file path="catalog/view/theme/*/template/checkout/confirm.tpl" error="skip">
+		<operation>
+			<search position="after"><![CDATA[</table>]]></search>
+			<add><![CDATA[
+				  <div class="message">
+    <h1>About color or goods in shortage <b class="red">( <span id="shortage_txt">Contact me at once</span> )</b>  <buttom class="btn btn-link orange btn-shortage">Change>></buttom></h1>
+    <ul class="shortage">
+        <li><input type="radio" name="shortage" checked="checked" value="Contact me at once">Contact me at once</li>
+        <li><input type="radio" name="shortage" value="Replace it by similar goods and inform me">Replace it by similar goods and inform me</li>
+        <li><input type="radio" name="shortage" value="Refund(for items in shortage) and inform me">Refund(for items in shortage) and inform me</li>
+        <li><input type="radio" name="shortage" value="Convert to my balance and inform me">Convert to my balance and inform me</li>
+        <li><input type="radio" name="shortage" value="See remarks">See remarks</li>
+    </ul>
+    <hr>
+    <h1>About drop shipment <b class="red">( <span id="shipment_txt">Don't need it</span> )</b>  <buttom class="btn btn-link orange btn-shipment">Change>></buttom></h1>
+    <ul class="shipment">
+        <li><input type="checkbox" name="shipment" value="1"> Drop Shipment? (If yes, we will not include SW-MALL publicity materials/invoices etc when we send the goods.)</li>
+    </ul>
+    <hr>
+    <br><br>
+    <header style="background: #ccc;padding: 5px 5px 0px 5px;"><h2>Extra requirement for the order</h2></header>
+    <p>Remark to the whole order: you could input extra requirement for the whole order in below column.</p>
+    <p><textarea name="remark" style="width: 100%;text-align: left;"></textarea></p>
+    <hr>
+  </div>
+
+  <style type="text/css">
+.red{color:red;}
+.orange{color:orange;}
+  .shortage,.shipment{display: none;}
+}
+</style>
+
+<script type="text/javascript">
+  $('.btn-shortage').click(function() {
+    $('.shortage').toggle();
+  })
+   $('.btn-shipment').click(function() {
+    $('.shipment').toggle();
+  })
+  $('[name="shipment"]').click(function(){
+    if($('[name="shipment"]').is(':checked')){
+      $('#shipment_txt').html('I need it');
+    }else{
+      $('#shipment_txt').html("Don't need it");
+    }
+  })
+  $('[name="shortage"]').click(function(){
+    $('#shortage_txt').html($('[name="shortage"]:checked').val());
+  })
+
+  $('#button-confirm').bind('click', function() {
+  $.ajax({
+    url: 'index.php?route=checkout/remark',
+    type: 'post',
+    data: {shortage:$('[name="shortage"]:checked').val(),shipment:($('[name="shipment"]').is(':checked'))?1:0,remark:$('[name="remark"]').val()},
+    success:function(data){
+    	console.log(data);
+    }
+  });
+});
+</script>
+  ]]></add>
+		</operation>
+	</file>
+
+  <file path="admin/controller/sale/order.php">    
+    <operation>
+      <search position="before"><![CDATA[$this->response->setOutput($this->load->view('sale/order_info.tpl', $data));]]></search>
+      <add><![CDATA[
+    $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_remark where order_id = '". $this->request->get['order_id'] ."'");
+    $data['order_remark'] = $query->row;]]></add>
+    </operation>  
+    <operation>
+      <search position="before"><![CDATA[$this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));]]></search>
+      <add><![CDATA[
+    $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_remark where order_id = '". $this->request->get['order_id'] ."'");
+    $data['order_remark'] = $query->row;]]></add>
+    </operation>
+  </file>
+
+  <file path="admin/view/template/sale/order_info.tpl">
+    <operation>
+      <search position="after"><![CDATA[<h3 class="panel-title"><i class="fa fa-info-circle"></i> <?php echo $text_order; ?></h3>]]></search>
+      <add><![CDATA[</div>
+      <div class="panel-body">
+        <p>About color or goods in shortage ( <b id="shortage_txt" style="color:red"><?php echo @$order_remark['shortage'];?></b> )</p>
+        <p>About drop shipment (<b id="shipment_txt" style="color:red"><?php echo @$order_remark['shipment'];?></b>)</p>
+        <p>remark:<br><b id="remark_txt" style="color:red"><?php echo @$order_remark['remark'];?></b></p>
+      </div>
+      ]]></add>
+    </operation>
+  </file>
+
+  <file path="admin/view/template/sale/order_invoice.tpl">
+    <operation>
+      <search position="before"><![CDATA[<?php if ($order['comment']) { ?>]]></search>
+      <add><![CDATA[<table class="table table-bordered">
+      <tbody>
+        <tr>
+          <p>About color or goods in shortage ( <b id="shortage_txt" style="color:red"><?php echo @$order_remark['shortage'];?></b> )</p>
+        <p>About drop shipment (<b id="shipment_txt" style="color:red"><?php echo @$order_remark['shipment'];?></b>)</p>
+        <p>remark:<br><b id="remark_txt" style="color:red"><?php echo @$order_remark['remark'];?></b></p>
+        </tr>
+      </tbody>
+    </table>
+      ]]></add>
+    </operation>
+  </file>
+</modification>
