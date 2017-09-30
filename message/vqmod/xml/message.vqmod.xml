@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+	<id>Message</id>
+	<name>Message</name>
+	<code>Message</code>
+	<version>1.0.0</version>
+	<vqmver>2.X</vqmver>
+	<author>Vincent</author>
+	
+	<file path="admin/controller/customer/customer.php">
+		<operation info="">
+			<search position="after"><![CDATA[$data['customers'][] = array(]]></search>
+			<add><![CDATA['message'    => $this->url->link('module/message/add','token=' . $this->session->data['token'] . '&id=' . $result['customer_id'] . $url,'SSL'),]]></add>
+		</operation>
+	</file>
+	<file path="admin/view/template/customer/customer_list.tpl">
+		<operation info="">
+			<search position="replace"><![CDATA[<?php if ($customer['approve']) {]]></search>
+			<add><![CDATA[<a href="<?php echo $customer['message']; ?>" data-toggle="tooltip" title="Send Message" class="btn btn-danger"><i class="fa fa-envelope"></i></a>
+			<?php if ($customer['approve']) {
+		]]></add>
+		</operation>
+	</file>
+	<file path="admin/controller/common/header.php">
+		<operation info="">
+			<search position="before"><![CDATA[$data['stores'] = array();]]></search>
+			<add><![CDATA[$data['message_link'] = $this->url->link('module/message', 'token=' . $this->session->data['token'], 'SSL');
+				$this->load->model('module/message');
+				$data['message_total'] = $this->model_module_message->getUnreadMessagestation();
+				$data['alerts'] += $data['message_total'];
+		]]></add>
+		</operation>
+	</file>
+	<file path="admin/view/template/common/header.tpl">
+		<operation info="">
+			<search position="before"><![CDATA[<li class="dropdown-header"><?php echo $text_affiliate; ?></li>]]></search>
+			<add><![CDATA[<li class="dropdown-header">Message</li>
+			<li><a href="<?php echo $message_link; ?>"><span class="label label-danger pull-right"><?php echo $message_total; ?></span>Message</a></li>
+		]]></add>
+		</operation>
+	</file>
+
+
+	<file path="catalog/view/theme/*/template/common/header.tpl" error="skip">
+		<operation error="skip">
+			<search position="replace" error="skip"><![CDATA[<div class="toplink-hover"><a href="<?php echo $account; ?>"><?php echo $text_account; ?>]]></search>
+			<add><![CDATA[<div class="toplink-hover"><a href="<?php echo $account; ?>"><?php echo $text_account; ?><?php echo ($message_total)?('('.$message_total.')'):'';?>]]></add>
+		</operation>
+		<operation error="skip">
+			<search position="replace" error="skip"><![CDATA[<li><a href="<?php echo $download; ?>"><?php echo $text_download; ?></a></li>]]></search>
+			<add><![CDATA[<li><a href="<?php echo $download; ?>"><?php echo $text_download; ?></a></li>
+			<li><a href="<?php echo $message; ?>"><?php if($message_total){?><span class="label label-danger pull-right" style="margin-top: 8px;margin-left: 74px;"><?php echo $message_total; ?></span><?php }?>My Message</a></li>]]></add>
+		</operation>
+	</file>
+    
+	<file path="catalog/controller/common/header.php" error="skip">
+		<operation error="skip">
+			<search position="after" error="skip"><![CDATA[$data['cart'] = $this->load->controller('common/cart');]]></search>
+			<add><![CDATA[$this->load->model('module/message');
+				$data['message'] = $this->url->link('module/message','','SSL');
+				$data['message_total'] = $this->model_module_message->getUnreadMessagestation();]]></add>
+		</operation>
+	</file>
+</modification>
