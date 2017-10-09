@@ -6,6 +6,8 @@ First_regist_Lucky can open a turntable in the first time a user opens the page,
 
 ## How to use it
 
+- Please install [coupon_for_user](https://github.com/vincenth520/opencart_Extensions/tree/master/coupon_for_user) first.
+
 - Upload to the project root directory to cover it `上传到项目根目录`
 - Open module/first_regist_Lucky, install `打开module/first_regist_Lucky,安装`
 - Edit first_regist_Lucky, set coupon probability `编辑first_regist_Lucky，设置优惠券概率等`
