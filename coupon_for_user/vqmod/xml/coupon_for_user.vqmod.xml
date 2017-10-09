@@ -212,10 +212,16 @@
 		</operation>
 	</file>
 
+	<file name="catalog/model/total/coupon.php">
+		<operation>
+			<search position="after"><![CDATA[$coupon_query->row['status'],]]></search>
+			<add><![CDATA['user'        => $coupon_query->row['user'],]]></add>
+		</operation>
+	</file>
 
 	<file name="catalog/controller/total/coupon.php">
-		<operation position="replace">
-			<search ><![CDATA[$this->response->addHeader('Content-Type: application/json');]]></search>
+		<operation>
+			<search position="replace"><![CDATA[$this->response->addHeader('Content-Type: application/json');]]></search>
 			<add><![CDATA[
 				if($coupon_info['user'] != 'A' && $coupon_info['user'] != 'G'.$this->customer->getGroupId() && !strstr($coupon_info['user'],'|'.$this->customer->getId().'|')){
 					$json['error'] = 'Error,You can not use this promotional code.';
