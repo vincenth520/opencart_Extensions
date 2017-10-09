@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+    <id>first_regist_lucky</id>
+	<version>1.1.1</version>
+	<vqmver>2.5.1</vqmver>
+	<author>Vincent</author>
+
+	<file name="catalog/view/theme/*/template/common/home.tpl">
+		<operation position="replace">
+			<search ><![CDATA[<?php echo $footer; ?>]]></search>
+			<add><![CDATA[<?php echo $footer; ?>
+				<script>
+					$.get('module/first_regist_luckly',function(data){
+						if(data != ''){
+							$('body').append(data);$('#myModal').modal();
+						}
+					})
+				</script>]]></add>
+		</operation>
+	</file>
+
+
+	<file name="catalog/controller/account/register.php">
+		<operation position="replace">
+			<search ><![CDATA[$customer_id = $this->model_account_customer->addCustomer($this->request->post);]]></search>
+			<add><![CDATA[$customer_id = $this->model_account_customer->addCustomer($this->request->post);
+				if(isset($this->session->data['regist_coupon'])){
+					$this->load->model('module/first_regist_luckly');
+					$coupon_data['user'] = 'C|'.$customer_id.'|';
+					$this->model_module_first_regist_luckly->editCoupon($coupon_data,$this->session->data['regist_coupon']);
+				}
+				]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/language/english/account/account.php" error="skip">
+		<operation position="replace"  error="skip">
+			<search ><![CDATA[$_['text_account']]]></search>
+			<add><![CDATA[$_['text_coupon'] = 'My Coupon';
+				$_['text_account']]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/language/english/common/header.php" error="skip">
+		<operation position="replace"  error="skip">
+			<search ><![CDATA[Transactions]]></search>
+			<add><![CDATA[My S-Credit]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/language/english/account/*.php" error="skip">
+		<operation position="replace"  error="skip">
+			<search ><![CDATA[Reward Points]]></search>
+			<add><![CDATA[S-Points]]></add>
+		</operation>
+		<operation position="replace"  error="skip">
+			<search ><![CDATA[Your]]></search>
+			<add><![CDATA[My]]></add>
+		</operation>
+		<operation position="replace"  error="skip">
+			<search ><![CDATA[Transactions]]></search>
+			<add><![CDATA[S-Credit]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/controller/account/account.php">
+		<operation position="replace" error="skip">
+			<search ><![CDATA[$data['transaction'] = ]]></search>
+			<add><![CDATA[$data['coupon'] = $this->url->link('account/coupon', '', 'SSL');
+				$data['text_coupon'] = $this->language->get('text_coupon');
+				$data['transaction'] = 
+				]]></add>
+		</operation>
+	</file>
+
+	<file name="catalog/view/theme/default/template/account/account.tpl">
+		<operation position="replace" error="skip">
+			<search ><![CDATA[<li><a href="<?php echo $transaction; ?>"><?php echo $text_transaction; ?></a></li>]]></search>
+			<add><![CDATA[<li><a href="<?php echo $transaction; ?>"><?php echo $text_transaction; ?></a></li>
+			<li><a href="<?php echo $coupon; ?>"><?php echo $text_coupon; ?></a></li>
+				]]></add>
+		</operation>
+	</file>
+
+</modification>
