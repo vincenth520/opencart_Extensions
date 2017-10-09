@@ -8,6 +8,8 @@
 
 This is some of the plug-ins I developed for Opencart at work,If you like trouble, give it to star(`工作中生产需要制作的opencart插件，一直更新，喜欢的给个star`)
 
+[![opencart version](https://img.shields.io/badge/opencart-2.1.0.2-green.svg)](https://github.com/opencart/opencart/releases/tag/2.1.0.1)
+
 本项目下所有插件均完美运行于opencart2.1.0.2版本,如其他版本请自行测试
 
 
